@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import API from "../services/api";
 
 function Dashboard() {
@@ -11,25 +11,28 @@ function Dashboard() {
     status: "",
   });
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
 
     try {
 
       const res = await API.get("/tasks/");
 
-      setTasks(res.data);
+      return res.data;
 
     } catch (err) {
 
       console.log(err);
+
+      return [];
+
     }
-  };
+  }, []);
 
   useEffect(() => {
 
-    fetchTasks();
+    fetchTasks().then(setTasks);
 
-  }, []);
+  }, [fetchTasks]);
 
   const handleChange = (e) => {
 
@@ -49,7 +52,7 @@ function Dashboard() {
 
       alert("Task Created");
 
-      fetchTasks();
+      fetchTasks().then(setTasks);
 
     } catch (err) {
 
