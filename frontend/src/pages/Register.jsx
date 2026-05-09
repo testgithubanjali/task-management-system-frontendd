@@ -1,7 +1,10 @@
 import { useState } from "react";
 import API from "../services/api";
+import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
+
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     name: "",
@@ -22,65 +25,119 @@ function Register() {
 
     e.preventDefault();
 
+    console.log(form);
+
     try {
 
-      const res = await API.post("/auth/register", form);
+      const res = await API.post(
+        "/auth/register",
+        form,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(res.data);
 
       alert(res.data.message);
 
+      navigate("/");
+
     } catch (err) {
 
-      alert(err.response.data.message);
+      console.log(err.response?.data);
+
+      alert(
+        err.response?.data?.message ||
+        JSON.stringify(err.response?.data?.errors) ||
+        "Registration Failed"
+      );
     }
   };
 
   return (
-    <div>
 
-      <h1>Register</h1>
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-r from-black via-gray-900 to-black">
 
-      <form onSubmit={handleSubmit}>
+      <div className="bg-white w-105 p-8 rounded-3xl shadow-2xl">
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-        />
+        <h1 className="text-4xl font-bold text-center mb-2 text-gray-800">
+          Create Account
+        </h1>
 
-        <br /><br />
+        <p className="text-center text-gray-500 mb-8">
+          Register to continue
+        </p>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-        />
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5"
+        >
 
-        <br /><br />
+          <input
+            type="text"
+            name="name"
+            value={form.name}
+            placeholder="Full Name"
+            onChange={handleChange}
+            className="w-full border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 focus:ring-black"
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-        />
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            placeholder="Email Address"
+            onChange={handleChange}
+            className="w-full border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 focus:ring-black"
+          />
 
-        <br /><br />
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            placeholder="Password"
+            onChange={handleChange}
+            className="w-full border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 focus:ring-black"
+          />
 
-        <select name="role" onChange={handleChange}>
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            className="w-full border border-gray-300 p-4 rounded-xl outline-none focus:ring-2 focus:ring-black"
+          >
+            <option value="user">User</option>
 
-          <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
 
-          <option value="admin">Admin</option>
+          <button
+            type="submit"
+            className="w-full bg-black text-white p-4 rounded-xl text-lg font-semibold hover:bg-gray-800 transition duration-300"
+          >
+            Register
+          </button>
 
-        </select>
+        </form>
 
-        <br /><br />
+        <p className="text-center mt-6 text-gray-600">
 
-        <button type="submit">Register</button>
+          Already have an account?
 
-      </form>
+          <Link
+            to="/"
+            className="text-black font-semibold ml-2 hover:underline"
+          >
+            Login
+          </Link>
+
+        </p>
+
+      </div>
+
     </div>
   );
 }

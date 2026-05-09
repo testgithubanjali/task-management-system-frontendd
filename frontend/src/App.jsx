@@ -11,22 +11,26 @@ function App() {
 
     <BrowserRouter>
 
-      <Routes>
+      <div className="min-h-screen bg-gray-100">
 
-        <Route path="/" element={<Login />} />
+        <Routes>
 
-        <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Login />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route path="/register" element={<Register />} />
 
-      </Routes>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+        </Routes>
+
+      </div>
 
     </BrowserRouter>
   );
